@@ -1,0 +1,31 @@
+project.tasks.create('pushSelectedFiles') {
+    group = 'custom tools'
+    description = 'Push ALL changed files to GitHub'
+
+    doLast {
+        def currentVer = project.version
+        def commitMsg = "Update files: Version ${currentVer}"
+
+        def gitExe = "C:/Program Files/Git/cmd/git.exe"
+        if (!file(gitExe).exists()) gitExe = "C:/Program Files (x86)/Git/cmd/git.exe"
+        if (!file(gitExe).exists()) gitExe = "git"
+
+        println "=== GitHub Push Task Started ==="
+
+        println "[Adding ALL files...]"
+        exec { commandLine gitExe, 'add', '.' }
+
+        try {
+            exec {
+                commandLine gitExe, 'commit', '-m', commitMsg
+            }
+        } catch (Exception e) {
+            println "Warning: Commit failed. (Maybe no changes found?)"
+        }
+
+        println "[Pushing to GitHub...]"
+        exec { commandLine gitExe, 'push', '-f', 'origin', 'HEAD' }
+
+        println "=== Push kanryou ==="
+    }
+}

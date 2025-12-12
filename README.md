@@ -1,1 +1,1 @@
-# upgauge_furnace_gui
+Replaces the furnace gauge around the output frame
